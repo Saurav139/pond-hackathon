@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>AI Agent Testing UI</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; background: #f5f5f5; }
+        .container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        h1 { color: #333; text-align: center; }
+        button { background: #007bff; color: white; padding: 12px 24px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background: #0056b3; }
+        button:disabled { background: #ccc; cursor: not-allowed; }
+        .loading { display: none; color: #666; margin: 20px 0; }
+        .result { margin-top: 20px; }
+        .section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 5px; }
+        .success { color: #28a745; }
+        .error { color: #dc3545; }
+        .recommendation { background: #fff3cd; padding: 10px; margin: 5px 0; border-left: 4px solid #ffc107; }
+        table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+        th, td { padding: 10px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background: #f8f9fa; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🤖 AI Agent Testing UI</h1>
+        
+        <div class="section">
+            <h2>Environment Detection Agent</h2>
+            <p>Click the button below to run a complete environment scan:</p>
+            <button onclick="runScan()" id="scanBtn">🔍 Run Environment Scan</button>
+            <div class="loading" id="loading">⏳ Scanning environment...</div>
+        </div>
+
+        <div id="results" class="result"></div>
+    </div>
+
+    <script>
+        async function runScan() {
+            const btn = document.getElementById('scanBtn');
+            const loading = document.getElementById('loading');
+            const results = document.getElementById('results');
+            
+            btn.disabled = true;
+            loading.style.display = 'block';
+            results.innerHTML = '';
+            
+            try {
+                const response = await fetch('/api/scan', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    displayResults(data);
+                } else {
+                    results.innerHTML = `<div class="error">❌ Error: ${data.error}</div>`;
+                }
+            } catch (error) {
+                results.innerHTML = `<div class="error">❌ Network Error: ${error.message}</div>`;
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        }
+        
+        function displayResults(data) {
+            const results = document.getElementById('results');
+            
+            const html = `
+                <div class="section">
+                    <h2>📊 Scan Results</h2>
+                    
+                    <h3>System Information</h3>
+                    <table>
+                        <tr><th>OS</th><td>${data.system.os}</td></tr>
+                        <tr><th>Architecture</th><td>${data.system.architecture}</td></tr>
+                        <tr><th>Hostname</th><td>${data.system.hostname}</td></tr>
+                    </table>
+                    
+                    <h3>Resources</h3>
+                    <table>
+                        <tr><th>RAM</th><td>${data.resources.ram_gb} GB</td></tr>
+                        <tr><th>CPU Cores</th><td>${data.resources.cpu_cores}</td></tr>
+                        <tr><th>CPU Frequency</th><td>${data.resources.cpu_frequency_mhz} MHz</td></tr>
+                        <tr><th>Total Disk</th><td>${data.resources.disk_space_gb} GB</td></tr>
+                        <tr><th>Available Disk</th><td>${data.resources.available_disk_gb} GB</td></tr>
+                    </table>
+                    
+                    <h3>Installed Software</h3>
+                    <table>
+                        <tr><th>Docker</th><td>${data.software.docker_installed ? '✅ Installed' : '❌ Not Installed'}</td></tr>
+                        <tr><th>Kubernetes</th><td>${data.software.kubernetes_installed ? '✅ Installed' : '❌ Not Installed'}</td></tr>
+                        <tr><th>Terraform</th><td>${data.software.terraform_installed ? '✅ Installed' : '❌ Not Installed'}</td></tr>
+                        <tr><th>AWS CLI</th><td>${data.software.aws_cli_installed ? '✅ Installed' : '❌ Not Installed'}</td></tr>
+                        <tr><th>GCP CLI</th><td>${data.software.gcp_cli_installed ? '✅ Installed' : '❌ Not Installed'}</td></tr>
+                        <tr><th>Azure CLI</th><td>${data.software.azure_cli_installed ? '✅ Installed' : '❌ Not Installed'}</td></tr>
+                        <tr><th>Python</th><td>${data.software.python_version}</td></tr>
+                        <tr><th>Node.js</th><td>${data.software.node_version}</td></tr>
+                    </table>
+                    
+                    <h3>🔧 Recommendations</h3>
+                    ${data.recommendations.map(rec => `<div class="recommendation">${rec}</div>`).join('')}
+                </div>
+            `;
+            
+            results.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
