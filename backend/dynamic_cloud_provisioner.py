@@ -61,6 +61,10 @@ class DynamicCloudProvisioner:
             "gcp_pubsub": {"provider": "gcp", "type": "managed_service"},
             "looker": {"provider": "gcp", "type": "managed_service"},
             "gcp_build": {"provider": "gcp", "type": "managed_service"},
+            "cloud_storage": {"provider": "gcp", "type": "managed_service"},
+            
+            # Additional AWS services
+            "s3": {"provider": "aws", "type": "managed_service"},
             
             # Third-party services - need external accounts
             "mongodb": {"provider": "mongodb_atlas", "type": "third_party"},
@@ -273,6 +277,20 @@ class DynamicCloudProvisioner:
         
         print(f"🚀 Auto-provisioning infrastructure for: {startup_info['name']}")
         print(f"📦 Pipeline services: {', '.join(pipeline_services)}")
+        
+        # Debug: Show which services are recognized vs unrecognized
+        recognized_services = []
+        unrecognized_services = []
+        for service in pipeline_services:
+            if service in self.service_requirements:
+                recognized_services.append(f"{service} ({self.service_requirements[service]['provider']})")
+            else:
+                unrecognized_services.append(service)
+        
+        if recognized_services:
+            print(f"✅ Recognized services: {', '.join(recognized_services)}")
+        if unrecognized_services:
+            print(f"⚠️ Unrecognized services (will be skipped): {', '.join(unrecognized_services)}")
         
         # Step 0: Check if account already exists
         existing_account = self._find_existing_account(startup_info)

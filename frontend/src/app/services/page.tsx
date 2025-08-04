@@ -66,7 +66,8 @@ export default function ServicesPage() {
           startup_name: startupName,
           founder_email: founderEmail,
           founder_name: founderName,
-          project_name: "platforge_pipeline_project"
+          project_name: "platforge_pipeline_project",
+          recommendations: recommendationsData ? recommendationsData.recommendations : null
         })
       })
       

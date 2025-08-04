@@ -40,6 +40,7 @@ class AutoProvisionRequest(BaseModel):
     founder_email: str
     founder_name: str
     project_name: str = "platforge_project"
+    recommendations: Optional[List[str]] = None  # AI recommendations for services
 
 app.add_middleware(
     CORSMiddleware,
@@ -210,69 +211,110 @@ async def auto_provision_startup_infrastructure(request: AutoProvisionRequest):
                 "message": "Please complete installation and verification first"
             }
         
-        # Get installed packages (these map to our 25 services)
-        installed_packages = verification_result.get("debug_info", {}).get("installed_packages", [])
-        
-        # Map installed packages to service IDs - only AWS/GCP services + Analytics tools
-        package_to_service_map = {
-            # Database-specific packages
-            "redshift-connector": "redshift",
-            "psycopg2-binary": "aws_rds",  # PostgreSQL driver for RDS
-            "mysql-connector-python": "aws_rds",  # MySQL driver for RDS
-            "pymongo": "mongodb",
-            "snowflake-connector-python": "snowflake",
-            
-            # AWS-specific packages
-            "paramiko": "aws_ec2",  # SSH client for EC2
-            "fabric": "aws_ec2",   # Remote execution for EC2
-            "awswrangler": "aws_glue",  # AWS Glue data wrangler
-            
-            # GCP-specific packages
-            "google-cloud-bigquery": "bigquery", 
-            "google-cloud-compute": "gcp_compute",
-            "google-cloud-sql-connector": "gcp_cloud_sql",
-            "google-cloud-firestore": "firestore",
-            "apache-beam[gcp]": "gcp_dataflow",
-            "google-cloud-dataflow": "gcp_dataflow",
-            "google-cloud-pubsub": "gcp_pubsub",
-            "kubernetes": "gke",
-            "google-cloud-container": "gke",
-            "google-cloud-build": "gcp_build",
-            
-            # Analytics & Visualization packages (third-party)
-            "tableauserverclient": "tableau",
-            "powerbiclient": "powerbi",
-            "looker-sdk": "looker",
-            
-            # Note: boto3 is generic AWS SDK - don't auto-map to specific service
-            # Only map when specific service packages are installed
-        }
-        
-        # Convert packages to service IDs
+        # Determine pipeline services from AI recommendations or installed packages
         pipeline_services = []
-        for package in installed_packages:
-            if package in package_to_service_map:
-                service_id = package_to_service_map[package]
-                if service_id not in pipeline_services:
-                    pipeline_services.append(service_id)
         
-        # If no specific services found, check if generic SDKs are present
-        if not pipeline_services:
-            generic_sdks = []
-            if "boto3" in installed_packages:
-                generic_sdks.append("boto3 (AWS SDK)")
-            if any(pkg.startswith("google-cloud") for pkg in installed_packages):
-                generic_sdks.append("google-cloud (GCP SDK)")
+        if request.recommendations:
+            # Use AI recommendations to determine services
+            print(f"🤖 Using AI recommendations: {request.recommendations}")
             
-            if generic_sdks:
+            # Map recommendation keywords to service IDs
+            recommendation_to_service_map = {
+                # Database services
+                "rds": "aws_rds",
+                "postgres": "aws_rds", 
+                "postgresql": "aws_rds",
+                "mysql": "aws_rds",
+                "database": "aws_rds",
+                "redshift": "redshift",
+                "bigquery": "bigquery",
+                "cloud sql": "gcp_cloud_sql",
+                "firestore": "firestore",
+                "dynamodb": "dynamodb",
+                "mongodb": "mongodb",
+                "snowflake": "snowflake",
+                
+                # Compute services
+                "ec2": "aws_ec2",
+                "compute": "gcp_compute",
+                "virtual machine": "gcp_compute",
+                "vm": "gcp_compute",
+                "kubernetes": "gke",
+                "gke": "gke",
+                
+                # Analytics & Data
+                "analytics": "bigquery",
+                "data warehouse": "bigquery",
+                "tableau": "tableau",
+                "powerbi": "powerbi",
+                "power bi": "powerbi",
+                "looker": "looker",
+                
+                # Other services
+                "storage": "cloud_storage",
+                "s3": "s3",
+                "dataflow": "gcp_dataflow",
+                "glue": "aws_glue",
+                "pubsub": "gcp_pubsub",
+                "pub/sub": "gcp_pubsub"
+            }
+            
+            # Extract services from recommendations
+            for recommendation in request.recommendations:
+                rec_lower = recommendation.lower()
+                for keyword, service_id in recommendation_to_service_map.items():
+                    if keyword in rec_lower and service_id not in pipeline_services:
+                        pipeline_services.append(service_id)
+                        print(f"📝 Mapped '{keyword}' → {service_id}")
+            
+            if not pipeline_services:
+                # If no specific services found in recommendations, provide default based on common patterns
+                print("🔍 No specific services found in recommendations, using intelligent defaults")
+                if any(word in " ".join(request.recommendations).lower() for word in ["data", "analytics", "database"]):
+                    pipeline_services = ["bigquery", "aws_rds"]  # Mixed cloud for data use cases
+                else:
+                    pipeline_services = ["aws_rds", "aws_ec2"]  # Default web app stack
+        
+        else:
+            # Fallback: Use installed packages (old behavior)
+            print("📦 No recommendations provided, falling back to installed packages")
+            
+            installed_packages = verification_result.get("debug_info", {}).get("installed_packages", [])
+            
+            package_to_service_map = {
+                "redshift-connector": "redshift",
+                "psycopg2-binary": "aws_rds",
+                "mysql-connector-python": "aws_rds", 
+                "pymongo": "mongodb",
+                "snowflake-connector-python": "snowflake",
+                "paramiko": "aws_ec2",
+                "fabric": "aws_ec2",
+                "awswrangler": "aws_glue",
+                "google-cloud-bigquery": "bigquery",
+                "google-cloud-compute": "gcp_compute",
+                "google-cloud-sql-connector": "gcp_cloud_sql",
+                "google-cloud-firestore": "firestore",
+                "apache-beam[gcp]": "gcp_dataflow",
+                "google-cloud-dataflow": "gcp_dataflow",
+                "google-cloud-pubsub": "gcp_pubsub",
+                "kubernetes": "gke",
+                "google-cloud-container": "gke",
+                "google-cloud-build": "gcp_build",
+                "tableauserverclient": "tableau",
+                "powerbiclient": "powerbi",
+                "looker-sdk": "looker",
+            }
+            
+            for package in installed_packages:
+                if package in package_to_service_map:
+                    service_id = package_to_service_map[package]
+                    if service_id not in pipeline_services:
+                        pipeline_services.append(service_id)
+            
+            if not pipeline_services:
                 return {
                     "status": "error",
-                    "message": f"Found generic SDKs ({', '.join(generic_sdks)}) but no specific service packages. Install specific packages like 'redshift-connector', 'psycopg2-binary', etc. to enable auto-provisioning."
-                }
-            else:
-                return {
-                    "status": "error",
-                    "message": "No supported services found in your pipeline"
+                    "message": "No supported services found. Either provide recommendations or install specific service packages."
                 }
         
         # Initialize provisioner
