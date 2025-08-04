@@ -49,7 +49,10 @@ app.add_middleware(
         "http://localhost:3001", 
         "http://127.0.0.1:3000",
         "https://*.vercel.app",  # Allow all Vercel domains
-        "https://your-app.vercel.app"  # Replace with your actual domain
+        "https://platforge.ai",  # Main domain
+        "https://www.platforge.ai",  # WWW domain
+        "https://api.platforge.ai",  # API subdomain
+        "https://*.platforge.ai"  # All subdomains
     ],
     allow_credentials=True,
     allow_methods=["*"],
