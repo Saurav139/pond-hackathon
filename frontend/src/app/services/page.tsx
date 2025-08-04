@@ -54,8 +54,11 @@ export default function ServicesPage() {
       console.log('Starting auto-provisioning...', {
         startup_name: startupName,
         founder_email: founderEmail,
-        founder_name: founderName
+        founder_name: founderName,
+        recommendations: recommendationsData ? recommendationsData.recommendations : null
       })
+      
+      console.log('🔍 Debug - recommendationsData:', recommendationsData)
       
       const response = await fetch('http://localhost:8001/auto-provision', {
         method: 'POST',

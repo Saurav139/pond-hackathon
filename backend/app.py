@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import List
+from typing import List, Optional
 import platform
 from dynamic_installation_agent import DynamicInstallationAgent
 from infrastructure_verification import InfrastructureVerification
@@ -213,6 +213,11 @@ async def auto_provision_startup_infrastructure(request: AutoProvisionRequest):
         
         # Determine pipeline services from AI recommendations or installed packages
         pipeline_services = []
+        
+        print(f"🔍 Debug - Received request:")
+        print(f"   startup_name: {request.startup_name}")
+        print(f"   recommendations: {request.recommendations}")
+        print(f"   recommendations type: {type(request.recommendations)}")
         
         if request.recommendations:
             # Use AI recommendations to determine services
