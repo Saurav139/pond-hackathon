@@ -2,7 +2,7 @@
 
 🚀 **AI-Powered Cloud Infrastructure Provisioning Platform**
 
-PlatForge.ai automatically creates and configures cloud infrastructure for startups in minutes. Just describe your needs, and our AI will provision everything from AWS accounts to databases, compute instances, and more.
+PlatForge.ai automatically creates and configures cloud and related infrastructure for startups in minutes. Just describe your needs, and our AI will provision everything from AWS/GCP accounts to databases, visualization services, and more.
 
 ## ✨ Features
 
@@ -10,8 +10,8 @@ PlatForge.ai automatically creates and configures cloud infrastructure for start
 - 🚀 **Auto-Provisioning**: Creates AWS/GCP accounts and resources automatically  
 - ⚙️ **Service Configuration**: Individual service setup with real connection details
 - 💾 **Account Persistence**: Remembers existing accounts to avoid duplicates
-- 📊 **25+ Supported Services**: AWS, GCP, MongoDB, Snowflake, Tableau, and more
-- 🎨 **Modern UI**: Cyber-themed interface with real-time status updates
+- 📊 **15+ Supported Services**: AWS, GCP, MongoDB, Tableau, and more
+
 
 ## 🏗️ Architecture
 
@@ -71,7 +71,7 @@ Perfect for startups needing:
 ## 💡 How It Works
 
 1. **AI Analysis**: Understands your startup's needs from natural language
-2. **Smart Recommendations**: Suggests optimal tech stack from 25+ services
+2. **Smart Recommendations**: Suggests optimal tech stack from 15+ services
 3. **Account Creation**: Creates isolated cloud sub-accounts automatically
 4. **Resource Provisioning**: Sets up databases, compute, storage, etc.
 5. **Configuration Ready**: Provides connection strings and console access
@@ -141,15 +141,6 @@ graph LR
 4. Push to branch (`git push origin feature/amazing-feature`)  
 5. Open Pull Request
 
-## 📄 License
-
-MIT License - see LICENSE file for details
-
-## 🆘 Support
-
-- 📧 Email: support@platforge.ai
-- 💬 Slack: #platforge-support  
-- 📚 Docs: https://docs.platforge.ai
 
 ---
 
