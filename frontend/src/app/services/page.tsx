@@ -63,7 +63,8 @@ export default function ServicesPage() {
       console.log('🔍 Debug - recommendationsData:', recommendationsData)
       console.log('🔍 Debug - extractedRecommendations:', extractedRecommendations)
       
-      const response = await fetch('http://localhost:8001/auto-provision', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+      const response = await fetch(`${apiUrl}/auto-provision`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

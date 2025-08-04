@@ -44,7 +44,13 @@ class AutoProvisionRequest(BaseModel):
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000", "http://localhost:3001", "http://127.0.0.1:3000"],
+    allow_origins=[
+        "http://localhost:3000", 
+        "http://localhost:3001", 
+        "http://127.0.0.1:3000",
+        "https://*.vercel.app",  # Allow all Vercel domains
+        "https://your-app.vercel.app"  # Replace with your actual domain
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -356,7 +362,12 @@ async def auto_provision_startup_infrastructure(request: AutoProvisionRequest):
 
 if __name__ == "__main__":
     import uvicorn
+    import os
+    
+    port = int(os.environ.get("PORT", 8001))
+    host = "0.0.0.0"  # Railway needs this
+    
     print("Starting PlatForge.ai API...")
-    print("API endpoint: http://localhost:8001")
-    print("Auto-provision endpoint: http://localhost:8001/auto-provision")
-    uvicorn.run(app, host="localhost", port=8001)
+    print(f"API endpoint: http://{host}:{port}")
+    print(f"Auto-provision endpoint: http://{host}:{port}/auto-provision")
+    uvicorn.run(app, host=host, port=port)
