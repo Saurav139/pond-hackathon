@@ -51,14 +51,17 @@ export default function ServicesPage() {
     setProvisionResult(null)
     
     try {
+      const extractedRecommendations = recommendationsData ? recommendationsData.map((rec: any) => rec.name) : null
+      
       console.log('Starting auto-provisioning...', {
         startup_name: startupName,
         founder_email: founderEmail,
         founder_name: founderName,
-        recommendations: recommendationsData ? recommendationsData.recommendations : null
+        recommendations: extractedRecommendations
       })
       
       console.log('🔍 Debug - recommendationsData:', recommendationsData)
+      console.log('🔍 Debug - extractedRecommendations:', extractedRecommendations)
       
       const response = await fetch('http://localhost:8001/auto-provision', {
         method: 'POST',
@@ -70,7 +73,7 @@ export default function ServicesPage() {
           founder_email: founderEmail,
           founder_name: founderName,
           project_name: "platforge_pipeline_project",
-          recommendations: recommendationsData ? recommendationsData.recommendations : null
+          recommendations: recommendationsData ? recommendationsData.map((rec: any) => rec.name) : null
         })
       })
       
@@ -238,28 +241,70 @@ export default function ServicesPage() {
                 <>
                   <div className="flex items-center space-x-2 text-green-400">
                     <div className="h-2 w-2 bg-green-400 rounded-full shadow-[0_0_5px_#4ade80]"></div>
-                    <span>✅ Account Created Successfully</span>
+                    <span>✅ Infrastructure Created Successfully</span>
                   </div>
                   <div className="ml-4 space-y-1 text-xs">
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Account ID:</span>
-                      <span className="text-white font-mono">{provisionResult.result.account_info.account_id}</span>
-                    </div>
-                    <div className="flex items-center justify-between">
-                      <span className="text-gray-400">Account Name:</span>
-                      <span className="text-white">{provisionResult.result.account_info.account_name}</span>
-                    </div>
-                    {provisionResult.result.account_info.console_url && (
-                      <div className="mt-2">
-                        <a 
-                          href={provisionResult.result.account_info.console_url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-green-400 hover:text-green-300 underline"
-                        >
-                          🔗 Open Account Console →
-                        </a>
-                      </div>
+                    {provisionResult.result.account_info.provider === 'gcp' && provisionResult.result.account_info.service_account_email ? (
+                      <>
+                        {/* GCP Service Account Display */}
+                        <div className="bg-blue-500/10 border border-blue-400/30 rounded p-2 space-y-1">
+                          <div className="flex items-center justify-between">
+                            <span className="text-blue-400 font-medium">🔑 Dedicated Service Account:</span>
+                          </div>
+                          <div className="flex items-start justify-between">
+                            <span className="text-gray-400">Email:</span>
+                            <span className="text-white font-mono text-right break-all ml-2">{provisionResult.result.account_info.service_account_email}</span>
+                          </div>
+                          <div className="flex items-center justify-between">
+                            <span className="text-gray-400">Project:</span>
+                            <span className="text-white font-mono">{provisionResult.result.account_info.project_id}</span>
+                          </div>
+                          <div className="flex flex-col space-y-1 mt-2">
+                            <a 
+                              href={provisionResult.result.account_info.console_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-green-400 hover:text-green-300 underline text-xs"
+                            >
+                              🔗 Manage Service Account →
+                            </a>
+                            {provisionResult.result.account_info.keys_url && (
+                              <a 
+                                href={provisionResult.result.account_info.keys_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="text-blue-400 hover:text-blue-300 underline text-xs"
+                              >
+                                🔐 Create API Keys →
+                              </a>
+                            )}
+                          </div>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        {/* AWS or fallback display */}
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-400">Account ID:</span>
+                          <span className="text-white font-mono">{provisionResult.result.account_info.account_id}</span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-gray-400">Account Name:</span>
+                          <span className="text-white">{provisionResult.result.account_info.account_name}</span>
+                        </div>
+                        {provisionResult.result.account_info.console_url && (
+                          <div className="mt-2">
+                            <a 
+                              href={provisionResult.result.account_info.console_url} 
+                              target="_blank" 
+                              rel="noopener noreferrer"
+                              className="text-green-400 hover:text-green-300 underline"
+                            >
+                              🔗 Open Account Console →
+                            </a>
+                          </div>
+                        )}
+                      </>
                     )}
                   </div>
                   <div className="flex items-center space-x-2 text-green-400">
@@ -353,6 +398,41 @@ export default function ServicesPage() {
                             </div>
                           )}
                         </div>
+                        
+                        {/* Service Account Section - for GCP services */}
+                        {(resource.service === 'BigQuery' || resource.service === 'Looker') && provisionResult.result?.provisioned_environments?.gcp?.service_account && (
+                          <div className="bg-green-500/10 border border-green-400/30 rounded border-dashed p-3">
+                            <p className="text-green-400 mb-2 font-medium">🔑 Dedicated Service Account:</p>
+                            <div className="font-mono text-xs space-y-1">
+                              <p><span className="text-cyan-400">Email:</span> <span className="text-white">{provisionResult.result.provisioned_environments.gcp.service_account}</span></p>
+                              <p><span className="text-cyan-400">Project:</span> <span className="text-white">{provisionResult.result.provisioned_environments.gcp.project_id}</span></p>
+                            </div>
+                            {provisionResult.result.provisioned_environments.gcp.credentials?.console_url && (
+                              <div className="mt-2">
+                                <a 
+                                  href={provisionResult.result.provisioned_environments.gcp.credentials.console_url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center text-green-400 hover:text-green-300 underline text-xs"
+                                >
+                                  🔗 Manage Service Account →
+                                </a>
+                              </div>
+                            )}
+                            {provisionResult.result.provisioned_environments.gcp.credentials?.keys_url && (
+                              <div className="mt-1">
+                                <a 
+                                  href={provisionResult.result.provisioned_environments.gcp.credentials.keys_url} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  className="inline-flex items-center text-blue-400 hover:text-blue-300 underline text-xs"
+                                >
+                                  🔐 Create API Keys →
+                                </a>
+                              </div>
+                            )}
+                          </div>
+                        )}
                         
                         
                         {resource.console_url && (

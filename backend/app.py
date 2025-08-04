@@ -201,15 +201,19 @@ async def generate_configuration(request: ConfigurationRequest):
 async def auto_provision_startup_infrastructure(request: AutoProvisionRequest):
     """Automatically provision cloud infrastructure based on installed pipeline"""
     try:
-        # Get verification results to see what's installed
-        verifier = InfrastructureVerification(request.project_name)
-        verification_result = verifier.run_full_verification()
+        # Get verification results to see what's installed (only if not using recommendations)
+        verification_result = {"status": "success", "debug_info": {"installed_packages": []}}
         
-        if verification_result["status"] != "success":
-            return {
-                "status": "error",
-                "message": "Please complete installation and verification first"
-            }
+        if not request.recommendations:
+            # Only require verification if we're not using AI recommendations
+            verifier = InfrastructureVerification(request.project_name)
+            verification_result = verifier.run_full_verification()
+            
+            if verification_result["status"] != "success":
+                return {
+                    "status": "error",
+                    "message": "Please complete installation and verification first"
+                }
         
         # Determine pipeline services from AI recommendations or installed packages
         pipeline_services = []
