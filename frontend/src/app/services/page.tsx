@@ -52,7 +52,16 @@ interface ProvisionResult {
   message: string;
   result?: {
     provisioned_resources: Resource[];
-    provisioned_environments?: unknown;
+    provisioned_environments?: {
+      gcp?: {
+        project_id: string;
+        region: string;
+        service_account: string;
+        bigquery_datasets?: unknown[];
+        [key: string]: unknown;
+      };
+      [key: string]: unknown;
+    };
     account_info?: {
       service_account_email: string;
       project_id: string;
