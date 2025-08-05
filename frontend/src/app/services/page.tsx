@@ -147,6 +147,7 @@ export default function ServicesPage() {
     } catch (error) {
       console.error('Auto-provisioning failed:', error)
       setProvisionResult({
+        startup_id: '',
         status: 'error',
         message: error instanceof Error ? error.message : 'Auto-provisioning failed'
       })
