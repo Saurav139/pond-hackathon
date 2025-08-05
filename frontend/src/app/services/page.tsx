@@ -1,11 +1,70 @@
 'use client'
 
 import React, { useState } from 'react'
+import Link from 'next/link'
 import { Wrench, Lightbulb, Zap, Settings, Package } from 'lucide-react'
+
+interface Recommendation {
+  name: string;
+  category: string;
+  description: string;
+  packages?: string[];
+}
+
+interface Resource {
+  service: string;
+  status: string;
+  instance_id?: string;
+  endpoint?: string;
+  database_name?: string;
+  username?: string;
+  connection_string?: string;
+  console_link?: string;
+  region?: string;
+  [key: string]: string | undefined;
+}
+
+interface ProvisionResult {
+  aws_projects?: unknown[];
+  gcp_projects?: {
+    project_id: string;
+    service_account: {
+      name: string;
+      email: string;
+      console_link: string;
+    };
+    resources?: {
+      bigquery_datasets?: {
+        dataset_id: string;
+        location: string;
+        connection_string: string;
+        console_link: string;
+      }[];
+      looker_config?: {
+        project_name: string;
+        git_repo: string;
+        lookml_files: string[];
+      };
+    };
+  }[];
+  startup_id: string;
+  status: string;
+  message: string;
+  result?: {
+    provisioned_resources: Resource[];
+    account_info?: {
+      service_account_email: string;
+      project_id: string;
+      account_id: string;
+      account_name: string;
+      console_link: string;
+    };
+  };
+}
 
 export default function ServicesPage() {
   // Recommendations section (from chatbot) - will be populated from URL params or local storage
-  const [recommendationsData, setRecommendationsData] = useState<any>(null)
+  const [recommendationsData, setRecommendationsData] = useState<Recommendation[] | null>(null)
   
   // Load recommendations on component mount
   React.useEffect(() => {
@@ -39,7 +98,7 @@ export default function ServicesPage() {
   const [founderEmail, setFounderEmail] = useState('')
   const [founderName, setFounderName] = useState('')
   const [provisionLoading, setProvisionLoading] = useState(false)
-  const [provisionResult, setProvisionResult] = useState<any>(null)
+  const [provisionResult, setProvisionResult] = useState<ProvisionResult | null>(null)
 
   const handleAutoProvision = async () => {
     if (!startupName.trim() || !founderEmail.trim() || !founderName.trim()) {
@@ -51,7 +110,7 @@ export default function ServicesPage() {
     setProvisionResult(null)
     
     try {
-      const extractedRecommendations = recommendationsData ? recommendationsData.map((rec: any) => rec.name) : null
+      const extractedRecommendations = recommendationsData ? recommendationsData.map((rec: Recommendation) => rec.name) : null
       
       console.log('Starting auto-provisioning...', {
         startup_name: startupName,
@@ -74,7 +133,7 @@ export default function ServicesPage() {
           founder_email: founderEmail,
           founder_name: founderName,
           project_name: "platforge_pipeline_project",
-          recommendations: recommendationsData ? recommendationsData.map((rec: any) => rec.name) : null
+          recommendations: recommendationsData ? recommendationsData.map((rec: Recommendation) => rec.name) : null
         })
       })
       
@@ -110,7 +169,7 @@ export default function ServicesPage() {
             <h1 className="text-3xl font-bold text-white drop-shadow-[0_0_10px_#06b6d4]">PlatForge.ai Services</h1>
           </div>
           <nav className="flex space-x-6">
-            <a href="/" className="text-green-400 hover:text-green-300 font-medium border border-green-400/30 px-4 py-2 rounded-lg hover:shadow-[0_0_15px_#4ade80] transition-all">Chat Assistant</a>
+            <Link href="/" className="text-green-400 hover:text-green-300 font-medium border border-green-400/30 px-4 py-2 rounded-lg hover:shadow-[0_0_15px_#4ade80] transition-all">Chat Assistant</Link>
           </nav>
         </div>
         <p className="text-green-300 mt-2 drop-shadow-[0_0_5px_#4ade80]">AI-powered platform engineering, simplified</p>
@@ -151,7 +210,7 @@ export default function ServicesPage() {
                 <h4 className="text-orange-400 font-medium text-sm mb-2">Current Recommendations:</h4>
                 {recommendationsData && Array.isArray(recommendationsData) ? (
                   <div className="space-y-1 text-sm text-gray-300">
-                    {recommendationsData.map((rec: any, index: number) => (
+                    {recommendationsData.map((rec: Recommendation, index: number) => (
                       <div key={index} className="flex items-center space-x-2">
                         <span className="w-2 h-2 bg-orange-400 rounded-full"></span>
                         <span>{rec.name} - {rec.description}</span>
@@ -363,7 +422,7 @@ export default function ServicesPage() {
                 </p>
                 
                 <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {provisionResult.result.provisioned_resources.map((resource: any, index: number) => (
+                  {provisionResult.result.provisioned_resources.map((resource: Resource, index: number) => (
                     <div key={index} className="bg-blue-500/10 border border-blue-400/30 rounded-lg p-4">
                       <div className="flex justify-between items-center mb-3">
                         <h4 className="text-blue-400 font-medium">{resource.service}</h4>

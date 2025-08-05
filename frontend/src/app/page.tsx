@@ -4,8 +4,21 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { MessageSquare, Zap, Workflow, CheckCircle } from 'lucide-react'
 
+interface Recommendation {
+  name: string;
+  category: string;
+  description: string;
+  packages?: string[];
+}
+
+interface Message {
+  type: 'bot' | 'user';
+  content: string;
+  recommendations?: Recommendation[] | null;
+}
+
 export default function ChatAssistant() {
-  const [messages, setMessages] = useState([
+  const [messages, setMessages] = useState<Message[]>([
     {
       type: 'bot',
       content: "Hello! I'm your PlatForge.ai assistant. I'll help you design the perfect platform architecture for your project. What are you looking to build?",
@@ -45,7 +58,7 @@ export default function ChatAssistant() {
   const handleSendMessage = async () => {
     if (!inputValue.trim()) return
     
-    const newMessage = { type: 'user', content: inputValue }
+    const newMessage: Message = { type: 'user', content: inputValue }
     setMessages(prev => [...prev, newMessage])
     const userInput = inputValue
     setInputValue('')
@@ -92,7 +105,7 @@ export default function ChatAssistant() {
     const recommendations = await getRecommendations(useCase, companyStage, cloudPreference)
     
     setTimeout(() => {
-      const botResponse = {
+      const botResponse: Message = {
         type: 'bot',
         content: recommendations 
           ? `Based on your requirements, I've identified this as a ${useCase.replace('_', ' ')} use case. Here are my platform recommendations for a ${companyStage} company:` 
@@ -121,7 +134,7 @@ export default function ChatAssistant() {
     const recommendations = await getRecommendations(useCase, companyStage, cloudPreference)
     
     setTimeout(() => {
-      const botResponse = {
+      const botResponse: Message = {
         type: 'bot',
         content: `Here are my platform recommendations for your ${useCase.replace('_', ' ')} project:`,
         recommendations: recommendations
@@ -176,7 +189,7 @@ export default function ChatAssistant() {
                         <div className="mt-4 space-y-3">
                           <h4 className="text-green-400 font-medium text-sm">Recommended Platform Tools:</h4>
                           <div className="grid gap-3">
-                            {message.recommendations.map((rec: any, recIndex: number) => (
+                            {message.recommendations.map((rec: Recommendation, recIndex: number) => (
                               <div key={recIndex} className="bg-black/30 p-3 rounded-lg border border-green-400/30">
                                 <div className="flex justify-between items-start mb-2">
                                   <h5 className="text-cyan-400 font-medium text-sm">{rec.name}</h5>
@@ -208,7 +221,7 @@ export default function ChatAssistant() {
                             </button>
                             <button 
                               onClick={() => {
-                                const botResponse = {
+                                const botResponse: Message = {
                                   type: 'bot',
                                   content: "I'd be happy to provide different recommendations! Please describe what you're looking for or use the form below to get more specific suggestions.",
                                   recommendations: null
