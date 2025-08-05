@@ -58,6 +58,8 @@ interface ProvisionResult {
         region: string;
         service_account: string;
         bigquery_datasets?: unknown[];
+        console_url?: string;
+        keys_url?: string;
         [key: string]: unknown;
       };
       [key: string]: unknown;
