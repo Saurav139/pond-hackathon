@@ -60,6 +60,10 @@ interface ProvisionResult {
         bigquery_datasets?: unknown[];
         console_url?: string;
         keys_url?: string;
+        credentials?: {
+          console_url?: string;
+          keys_url?: string;
+        };
         [key: string]: unknown;
       };
       [key: string]: unknown;
