@@ -31,7 +31,8 @@ export default function ChatAssistant() {
 
   const getRecommendations = async (useCase: string, companyStage: string, cloudPreference: string) => {
     try {
-      const response = await fetch('http://localhost:8001/recommendations', {
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001';
+      const response = await fetch(`${apiUrl}/recommendations`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
