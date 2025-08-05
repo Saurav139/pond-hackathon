@@ -4888,7 +4888,389 @@
       "account_id": "platforge",
       "account_name": "PlatForge-codyverse-Isolated",
       "console_url": "https://console.cloud.google.com/home/dashboard?project=platforge"
+    },
+    "davebusters_founder@davebusters.com": {
+      "startup_id": "davebusters-e0b5b0",
+      "startup_info": {
+        "name": "Davebusters",
+        "email": "founder@davebusters.com",
+        "founder_name": "Dave"
+      },
+      "created_at": 1754352470.922264,
+      "last_accessed": 1754352470.922265,
+      "provisioned_environments": {
+        "gcp": {
+          "project_id": "platforge",
+          "project_name": "PlatForge-Davebusters-Isolated",
+          "console_url": "https://console.cloud.google.com/home/dashboard?project=platforge",
+          "status": "active",
+          "startup_namespace": "startup-davebusters-e0b5b0",
+          "service_account": "pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com",
+          "storage_bucket": "platforge-davebusters-e0b5b0-data",
+          "isolation_level": "enhanced_shared",
+          "credentials": {
+            "email": "pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com",
+            "name": "pf-davebusters-e0b5b0",
+            "display_name": "PlatForge Service Account - Davebusters",
+            "project_id": "platforge",
+            "console_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com?project=platforge",
+            "keys_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com/keys?project=platforge",
+            "status": "active",
+            "unique_id": "111663574242851800885",
+            "service_account_json": "{\"type\": \"service_account\", \"project_id\": \"platforge\", \"client_email\": \"pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com\"}",
+            "instructions": [
+              "1. Go to: https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com?project=platforge",
+              "2. Click 'Keys' tab",
+              "3. Create new key (JSON format)",
+              "4. Download and use for service authentication"
+            ]
+          },
+          "iam_roles": [
+            "roles/bigquery.dataEditor",
+            "roles/storage.objectAdmin",
+            "roles/viewer"
+          ]
+        }
+      },
+      "provisioned_resources": [
+        {
+          "service": "BigQuery",
+          "type": "dataset",
+          "name": "startup_davebusters_e0b5b0_davebusters_analytics",
+          "project_id": "platforge",
+          "dataset_id": "startup_davebusters_e0b5b0_davebusters_analytics",
+          "startup_namespace": "startup-davebusters-e0b5b0",
+          "query_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_davebusters_e0b5b0_davebusters_analytics!3e1",
+          "status": "active",
+          "connection_string": "bigquery://platforge/startup_davebusters_e0b5b0_davebusters_analytics",
+          "console_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_davebusters_e0b5b0_davebusters_analytics!3e1",
+          "dataset_url": "https://console.cloud.google.com/bigquery?project=platforge&p=platforge&d=startup_davebusters_e0b5b0_davebusters_analytics&page=dataset"
+        },
+        {
+          "service": "Looker",
+          "type": "analytics_platform",
+          "name": "startupdavebusterse0b5b0-looker",
+          "project_id": "platforge",
+          "instance_name": "startupdavebusterse0b5b0-looker",
+          "startup_namespace": "startup-davebusters-e0b5b0",
+          "status": "configured",
+          "looker_project_name": "startupdavebusterse0b5b0_looker_project",
+          "bigquery_connection": {
+            "project_id": "platforge",
+            "dataset": "startup_davebusters_e0b5b0_davebusters_analytics",
+            "service_account": "pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com"
+          },
+          "console_url": "https://console.cloud.google.com/looker/instances?project=platforge",
+          "connection_string": "looker://platforge/startupdavebusterse0b5b0-looker",
+          "setup_instructions": [
+            "1. Go to Looker Console in GCP",
+            "2. Create new Looker instance",
+            "3. Name it: startupdavebusterse0b5b0-looker",
+            "4. Connect to BigQuery using the service account created",
+            "5. Use dataset: startup_davebusters_e0b5b0_davebusters_analytics"
+          ],
+          "lookml_project": {
+            "name": "startupdavebusterse0b5b0_looker_project",
+            "connection_name": "startupdavebusterse0b5b0-looker_bq_connection",
+            "git_repository": "https://github.com/platforge/startupdavebusterse0b5b0-looker-lookml.git"
+          },
+          "sample_lookml": "\nconnection: \"startupdavebusterse0b5b0-looker_bq_connection\" {\n  database: \"platforge\"\n  project_name: \"platforge\"\n  schema: \"startup_davebusters_e0b5b0_davebusters_analytics\"\n  type: bigquery\n}\n\nview: analytics_data {\n  sql_table_name: `platforge.startup_davebusters_e0b5b0_davebusters_analytics.your_table` ;;\n  \n  dimension: id {\n    primary_key: yes\n    type: string\n    sql: ${TABLE}.id ;;\n  }\n  \n  measure: count {\n    type: count\n    drill_fields: [id]\n  }\n}\n\nexplore: analytics_data {}\n",
+          "python_sdk_setup": "\n# Looker SDK Setup\nimport looker_sdk\n\n# Configuration for your Looker instance\nconfig = {\n    'base_url': 'https://your-looker-instance.looker.com:19999',\n    'client_id': 'your_client_id',\n    'client_secret': 'your_client_secret',\n}\n\n# Initialize SDK\nsdk = looker_sdk.init40(config_settings=config)\n\n# Example: Get all dashboards\ndashboards = sdk.all_dashboards()\nprint(f\"Found {len(dashboards)} dashboards\")\n\n# Example: Run a query\nquery = {\n    'model': 'startupdavebusterse0b5b0_looker_project',\n    'explore': 'analytics_data', \n    'dimensions': ['analytics_data.id'],\n    'measures': ['analytics_data.count']\n}\n\nresult = sdk.run_inline_query('json', query)\nprint(\"Query result:\", result)\n"
+        }
+      ],
+      "pipeline_services": [
+        "bigquery",
+        "looker"
+      ],
+      "access_package": {
+        "environments": {
+          "gcp": {
+            "project_id": "platforge",
+            "project_name": "PlatForge-Davebusters-Isolated",
+            "console_url": "https://console.cloud.google.com/home/dashboard?project=platforge",
+            "status": "active",
+            "startup_namespace": "startup-davebusters-e0b5b0",
+            "service_account": "pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com",
+            "storage_bucket": "platforge-davebusters-e0b5b0-data",
+            "isolation_level": "enhanced_shared",
+            "credentials": {
+              "email": "pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com",
+              "name": "pf-davebusters-e0b5b0",
+              "display_name": "PlatForge Service Account - Davebusters",
+              "project_id": "platforge",
+              "console_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com?project=platforge",
+              "keys_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com/keys?project=platforge",
+              "status": "active",
+              "unique_id": "111663574242851800885",
+              "service_account_json": "{\"type\": \"service_account\", \"project_id\": \"platforge\", \"client_email\": \"pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com\"}",
+              "instructions": [
+                "1. Go to: https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com?project=platforge",
+                "2. Click 'Keys' tab",
+                "3. Create new key (JSON format)",
+                "4. Download and use for service authentication"
+              ]
+            },
+            "iam_roles": [
+              "roles/bigquery.dataEditor",
+              "roles/storage.objectAdmin",
+              "roles/viewer"
+            ]
+          }
+        },
+        "third_party_accounts": [],
+        "resources": [
+          {
+            "service": "BigQuery",
+            "type": "dataset",
+            "name": "startup_davebusters_e0b5b0_davebusters_analytics",
+            "project_id": "platforge",
+            "dataset_id": "startup_davebusters_e0b5b0_davebusters_analytics",
+            "startup_namespace": "startup-davebusters-e0b5b0",
+            "query_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_davebusters_e0b5b0_davebusters_analytics!3e1",
+            "status": "active",
+            "connection_string": "bigquery://platforge/startup_davebusters_e0b5b0_davebusters_analytics",
+            "console_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_davebusters_e0b5b0_davebusters_analytics!3e1",
+            "dataset_url": "https://console.cloud.google.com/bigquery?project=platforge&p=platforge&d=startup_davebusters_e0b5b0_davebusters_analytics&page=dataset"
+          },
+          {
+            "service": "Looker",
+            "type": "analytics_platform",
+            "name": "startupdavebusterse0b5b0-looker",
+            "project_id": "platforge",
+            "instance_name": "startupdavebusterse0b5b0-looker",
+            "startup_namespace": "startup-davebusters-e0b5b0",
+            "status": "configured",
+            "looker_project_name": "startupdavebusterse0b5b0_looker_project",
+            "bigquery_connection": {
+              "project_id": "platforge",
+              "dataset": "startup_davebusters_e0b5b0_davebusters_analytics",
+              "service_account": "pf-davebusters-e0b5b0@platforge.iam.gserviceaccount.com"
+            },
+            "console_url": "https://console.cloud.google.com/looker/instances?project=platforge",
+            "connection_string": "looker://platforge/startupdavebusterse0b5b0-looker",
+            "setup_instructions": [
+              "1. Go to Looker Console in GCP",
+              "2. Create new Looker instance",
+              "3. Name it: startupdavebusterse0b5b0-looker",
+              "4. Connect to BigQuery using the service account created",
+              "5. Use dataset: startup_davebusters_e0b5b0_davebusters_analytics"
+            ],
+            "lookml_project": {
+              "name": "startupdavebusterse0b5b0_looker_project",
+              "connection_name": "startupdavebusterse0b5b0-looker_bq_connection",
+              "git_repository": "https://github.com/platforge/startupdavebusterse0b5b0-looker-lookml.git"
+            },
+            "sample_lookml": "\nconnection: \"startupdavebusterse0b5b0-looker_bq_connection\" {\n  database: \"platforge\"\n  project_name: \"platforge\"\n  schema: \"startup_davebusters_e0b5b0_davebusters_analytics\"\n  type: bigquery\n}\n\nview: analytics_data {\n  sql_table_name: `platforge.startup_davebusters_e0b5b0_davebusters_analytics.your_table` ;;\n  \n  dimension: id {\n    primary_key: yes\n    type: string\n    sql: ${TABLE}.id ;;\n  }\n  \n  measure: count {\n    type: count\n    drill_fields: [id]\n  }\n}\n\nexplore: analytics_data {}\n",
+            "python_sdk_setup": "\n# Looker SDK Setup\nimport looker_sdk\n\n# Configuration for your Looker instance\nconfig = {\n    'base_url': 'https://your-looker-instance.looker.com:19999',\n    'client_id': 'your_client_id',\n    'client_secret': 'your_client_secret',\n}\n\n# Initialize SDK\nsdk = looker_sdk.init40(config_settings=config)\n\n# Example: Get all dashboards\ndashboards = sdk.all_dashboards()\nprint(f\"Found {len(dashboards)} dashboards\")\n\n# Example: Run a query\nquery = {\n    'model': 'startupdavebusterse0b5b0_looker_project',\n    'explore': 'analytics_data', \n    'dimensions': ['analytics_data.id'],\n    'measures': ['analytics_data.count']\n}\n\nresult = sdk.run_inline_query('json', query)\nprint(\"Query result:\", result)\n"
+          }
+        ],
+        "quick_start_guide": {
+          "step_1": "Access your AWS console with the provided credentials",
+          "step_2": "All your services are provisioned and ready",
+          "step_3": "Start uploading data and building analytics",
+          "step_4": "Scale up as your startup grows"
+        },
+        "support": {
+          "documentation": "https://docs.platforge.ai",
+          "support_email": "support@platforge.ai",
+          "slack_channel": "#platforge-support"
+        }
+      },
+      "account_id": "platforge",
+      "account_name": "PlatForge-Davebusters-Isolated",
+      "console_url": "https://console.cloud.google.com/home/dashboard?project=platforge"
+    },
+    "corepower_alan@corepower.com": {
+      "startup_id": "corepower-4f3a45",
+      "startup_info": {
+        "name": "Corepower",
+        "email": "Alan@corepower.com",
+        "founder_name": "Alan"
+      },
+      "created_at": 1754353365.485913,
+      "last_accessed": 1754354168.874688,
+      "provisioned_environments": {
+        "gcp": {
+          "project_id": "platforge",
+          "project_name": "PlatForge-Corepower-Isolated",
+          "console_url": "https://console.cloud.google.com/home/dashboard?project=platforge",
+          "status": "active",
+          "startup_namespace": "startup-corepower-4f3a45",
+          "service_account": "pf-corepower-4f3a45@platforge.iam.gserviceaccount.com",
+          "storage_bucket": "platforge-corepower-4f3a45-data",
+          "isolation_level": "enhanced_shared",
+          "credentials": {
+            "email": "pf-corepower-4f3a45@platforge.iam.gserviceaccount.com",
+            "name": "pf-corepower-4f3a45",
+            "display_name": "PlatForge Service Account - Corepower",
+            "project_id": "platforge",
+            "console_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-corepower-4f3a45@platforge.iam.gserviceaccount.com?project=platforge",
+            "keys_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-corepower-4f3a45@platforge.iam.gserviceaccount.com/keys?project=platforge",
+            "status": "active",
+            "unique_id": "110455389555244369168",
+            "service_account_json": "{\"type\": \"service_account\", \"project_id\": \"platforge\", \"client_email\": \"pf-corepower-4f3a45@platforge.iam.gserviceaccount.com\"}",
+            "instructions": [
+              "1. Go to: https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-corepower-4f3a45@platforge.iam.gserviceaccount.com?project=platforge",
+              "2. Click 'Keys' tab",
+              "3. Create new key (JSON format)",
+              "4. Download and use for service authentication"
+            ]
+          },
+          "iam_roles": [
+            "roles/bigquery.dataEditor",
+            "roles/storage.objectAdmin",
+            "roles/viewer"
+          ]
+        }
+      },
+      "provisioned_resources": [
+        {
+          "service": "BigQuery",
+          "type": "dataset",
+          "name": "startup_corepower_4f3a45_corepower_analytics",
+          "project_id": "platforge",
+          "dataset_id": "startup_corepower_4f3a45_corepower_analytics",
+          "startup_namespace": "startup-corepower-4f3a45",
+          "query_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_corepower_4f3a45_corepower_analytics!3e1",
+          "status": "active",
+          "connection_string": "bigquery://platforge/startup_corepower_4f3a45_corepower_analytics",
+          "console_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_corepower_4f3a45_corepower_analytics!3e1",
+          "dataset_url": "https://console.cloud.google.com/bigquery?project=platforge&p=platforge&d=startup_corepower_4f3a45_corepower_analytics&page=dataset"
+        },
+        {
+          "service": "Looker",
+          "type": "analytics_platform",
+          "name": "startupcorepower4f3a45-looker",
+          "project_id": "platforge",
+          "instance_name": "startupcorepower4f3a45-looker",
+          "startup_namespace": "startup-corepower-4f3a45",
+          "status": "configured",
+          "looker_project_name": "startupcorepower4f3a45_looker_project",
+          "bigquery_connection": {
+            "project_id": "platforge",
+            "dataset": "startup_corepower_4f3a45_corepower_analytics",
+            "service_account": "pf-corepower-4f3a45@platforge.iam.gserviceaccount.com"
+          },
+          "console_url": "https://console.cloud.google.com/looker/instances?project=platforge",
+          "connection_string": "looker://platforge/startupcorepower4f3a45-looker",
+          "setup_instructions": [
+            "1. Go to Looker Console in GCP",
+            "2. Create new Looker instance",
+            "3. Name it: startupcorepower4f3a45-looker",
+            "4. Connect to BigQuery using the service account created",
+            "5. Use dataset: startup_corepower_4f3a45_corepower_analytics"
+          ],
+          "lookml_project": {
+            "name": "startupcorepower4f3a45_looker_project",
+            "connection_name": "startupcorepower4f3a45-looker_bq_connection",
+            "git_repository": "https://github.com/platforge/startupcorepower4f3a45-looker-lookml.git"
+          },
+          "sample_lookml": "\nconnection: \"startupcorepower4f3a45-looker_bq_connection\" {\n  database: \"platforge\"\n  project_name: \"platforge\"\n  schema: \"startup_corepower_4f3a45_corepower_analytics\"\n  type: bigquery\n}\n\nview: analytics_data {\n  sql_table_name: `platforge.startup_corepower_4f3a45_corepower_analytics.your_table` ;;\n  \n  dimension: id {\n    primary_key: yes\n    type: string\n    sql: ${TABLE}.id ;;\n  }\n  \n  measure: count {\n    type: count\n    drill_fields: [id]\n  }\n}\n\nexplore: analytics_data {}\n",
+          "python_sdk_setup": "\n# Looker SDK Setup\nimport looker_sdk\n\n# Configuration for your Looker instance\nconfig = {\n    'base_url': 'https://your-looker-instance.looker.com:19999',\n    'client_id': 'your_client_id',\n    'client_secret': 'your_client_secret',\n}\n\n# Initialize SDK\nsdk = looker_sdk.init40(config_settings=config)\n\n# Example: Get all dashboards\ndashboards = sdk.all_dashboards()\nprint(f\"Found {len(dashboards)} dashboards\")\n\n# Example: Run a query\nquery = {\n    'model': 'startupcorepower4f3a45_looker_project',\n    'explore': 'analytics_data', \n    'dimensions': ['analytics_data.id'],\n    'measures': ['analytics_data.count']\n}\n\nresult = sdk.run_inline_query('json', query)\nprint(\"Query result:\", result)\n"
+        }
+      ],
+      "pipeline_services": [
+        "bigquery",
+        "looker"
+      ],
+      "access_package": {
+        "environments": {
+          "gcp": {
+            "project_id": "platforge",
+            "project_name": "PlatForge-Corepower-Isolated",
+            "console_url": "https://console.cloud.google.com/home/dashboard?project=platforge",
+            "status": "active",
+            "startup_namespace": "startup-corepower-4f3a45",
+            "service_account": "pf-corepower-4f3a45@platforge.iam.gserviceaccount.com",
+            "storage_bucket": "platforge-corepower-4f3a45-data",
+            "isolation_level": "enhanced_shared",
+            "credentials": {
+              "email": "pf-corepower-4f3a45@platforge.iam.gserviceaccount.com",
+              "name": "pf-corepower-4f3a45",
+              "display_name": "PlatForge Service Account - Corepower",
+              "project_id": "platforge",
+              "console_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-corepower-4f3a45@platforge.iam.gserviceaccount.com?project=platforge",
+              "keys_url": "https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-corepower-4f3a45@platforge.iam.gserviceaccount.com/keys?project=platforge",
+              "status": "active",
+              "unique_id": "110455389555244369168",
+              "service_account_json": "{\"type\": \"service_account\", \"project_id\": \"platforge\", \"client_email\": \"pf-corepower-4f3a45@platforge.iam.gserviceaccount.com\"}",
+              "instructions": [
+                "1. Go to: https://console.cloud.google.com/iam-admin/serviceaccounts/details/pf-corepower-4f3a45@platforge.iam.gserviceaccount.com?project=platforge",
+                "2. Click 'Keys' tab",
+                "3. Create new key (JSON format)",
+                "4. Download and use for service authentication"
+              ]
+            },
+            "iam_roles": [
+              "roles/bigquery.dataEditor",
+              "roles/storage.objectAdmin",
+              "roles/viewer"
+            ]
+          }
+        },
+        "third_party_accounts": [],
+        "resources": [
+          {
+            "service": "BigQuery",
+            "type": "dataset",
+            "name": "startup_corepower_4f3a45_corepower_analytics",
+            "project_id": "platforge",
+            "dataset_id": "startup_corepower_4f3a45_corepower_analytics",
+            "startup_namespace": "startup-corepower-4f3a45",
+            "query_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_corepower_4f3a45_corepower_analytics!3e1",
+            "status": "active",
+            "connection_string": "bigquery://platforge/startup_corepower_4f3a45_corepower_analytics",
+            "console_url": "https://console.cloud.google.com/bigquery?project=platforge&ws=!1m5!1m4!4m3!1splatforge!2sstartup_corepower_4f3a45_corepower_analytics!3e1",
+            "dataset_url": "https://console.cloud.google.com/bigquery?project=platforge&p=platforge&d=startup_corepower_4f3a45_corepower_analytics&page=dataset"
+          },
+          {
+            "service": "Looker",
+            "type": "analytics_platform",
+            "name": "startupcorepower4f3a45-looker",
+            "project_id": "platforge",
+            "instance_name": "startupcorepower4f3a45-looker",
+            "startup_namespace": "startup-corepower-4f3a45",
+            "status": "configured",
+            "looker_project_name": "startupcorepower4f3a45_looker_project",
+            "bigquery_connection": {
+              "project_id": "platforge",
+              "dataset": "startup_corepower_4f3a45_corepower_analytics",
+              "service_account": "pf-corepower-4f3a45@platforge.iam.gserviceaccount.com"
+            },
+            "console_url": "https://console.cloud.google.com/looker/instances?project=platforge",
+            "connection_string": "looker://platforge/startupcorepower4f3a45-looker",
+            "setup_instructions": [
+              "1. Go to Looker Console in GCP",
+              "2. Create new Looker instance",
+              "3. Name it: startupcorepower4f3a45-looker",
+              "4. Connect to BigQuery using the service account created",
+              "5. Use dataset: startup_corepower_4f3a45_corepower_analytics"
+            ],
+            "lookml_project": {
+              "name": "startupcorepower4f3a45_looker_project",
+              "connection_name": "startupcorepower4f3a45-looker_bq_connection",
+              "git_repository": "https://github.com/platforge/startupcorepower4f3a45-looker-lookml.git"
+            },
+            "sample_lookml": "\nconnection: \"startupcorepower4f3a45-looker_bq_connection\" {\n  database: \"platforge\"\n  project_name: \"platforge\"\n  schema: \"startup_corepower_4f3a45_corepower_analytics\"\n  type: bigquery\n}\n\nview: analytics_data {\n  sql_table_name: `platforge.startup_corepower_4f3a45_corepower_analytics.your_table` ;;\n  \n  dimension: id {\n    primary_key: yes\n    type: string\n    sql: ${TABLE}.id ;;\n  }\n  \n  measure: count {\n    type: count\n    drill_fields: [id]\n  }\n}\n\nexplore: analytics_data {}\n",
+            "python_sdk_setup": "\n# Looker SDK Setup\nimport looker_sdk\n\n# Configuration for your Looker instance\nconfig = {\n    'base_url': 'https://your-looker-instance.looker.com:19999',\n    'client_id': 'your_client_id',\n    'client_secret': 'your_client_secret',\n}\n\n# Initialize SDK\nsdk = looker_sdk.init40(config_settings=config)\n\n# Example: Get all dashboards\ndashboards = sdk.all_dashboards()\nprint(f\"Found {len(dashboards)} dashboards\")\n\n# Example: Run a query\nquery = {\n    'model': 'startupcorepower4f3a45_looker_project',\n    'explore': 'analytics_data', \n    'dimensions': ['analytics_data.id'],\n    'measures': ['analytics_data.count']\n}\n\nresult = sdk.run_inline_query('json', query)\nprint(\"Query result:\", result)\n"
+          }
+        ],
+        "quick_start_guide": {
+          "step_1": "Access your AWS console with the provided credentials",
+          "step_2": "All your services are provisioned and ready",
+          "step_3": "Start uploading data and building analytics",
+          "step_4": "Scale up as your startup grows"
+        },
+        "support": {
+          "documentation": "https://docs.platforge.ai",
+          "support_email": "support@platforge.ai",
+          "slack_channel": "#platforge-support"
+        }
+      },
+      "account_id": "platforge",
+      "account_name": "PlatForge-Corepower-Isolated",
+      "console_url": "https://console.cloud.google.com/home/dashboard?project=platforge"
     }
   },
-  "last_updated": 1754341227.098772
+  "last_updated": 1754354168.87469
 }
