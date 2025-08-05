@@ -52,12 +52,16 @@ interface ProvisionResult {
   message: string;
   result?: {
     provisioned_resources: Resource[];
+    provisioned_environments?: unknown;
     account_info?: {
       service_account_email: string;
       project_id: string;
       account_id: string;
       account_name: string;
       console_link: string;
+      provider?: string;
+      console_url?: string;
+      keys_url?: string;
     };
   };
 }
