@@ -49,9 +49,11 @@ export default function ChatAssistant() {
       }
       
       const data = await response.json()
+      console.log('✅ API Response:', data)
       return data.recommendations
     } catch (error) {
-      console.error('Failed to get recommendations:', error)
+      console.error('❌ Failed to get recommendations:', error)
+      console.error('API URL being used:', process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8001')
       return null
     }
   }
