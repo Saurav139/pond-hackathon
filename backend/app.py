@@ -52,7 +52,11 @@ app.add_middleware(
         "https://platforge.ai",  # Main domain
         "https://www.platforge.ai",  # WWW domain
         "https://api.platforge.ai",  # API subdomain
-        "https://*.platforge.ai"  # All subdomains
+        "https://*.platforge.ai",  # All subdomains
+        "https://frontend-dpwokogpl-saurav139s-projects.vercel.app",  # Current frontend
+        "https://frontend-og4sk7i89-saurav139s-projects.vercel.app",   # Previous frontend
+        "https://frontend-oe6r8smzv-saurav139s-projects.vercel.app",   # Previous frontend
+        "*"  # Allow all origins for now
     ],
     allow_credentials=True,
     allow_methods=["*"],
