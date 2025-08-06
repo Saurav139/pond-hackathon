@@ -49,6 +49,7 @@ app.add_middleware(
         "http://localhost:3001", 
         "http://127.0.0.1:3000",
         "https://platforge-41gsvyeev-saurav139s-projects.vercel.app",  # Submitted hackathon URL
+        "https://platforge.vercel.app",  # Vercel custom domain
         "https://platforge.ai",  # Main domain
         "https://www.platforge.ai",  # WWW domain
         "https://*.vercel.app"  # Allow all Vercel domains as backup
