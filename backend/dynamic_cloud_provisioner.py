@@ -166,10 +166,20 @@ class DynamicCloudProvisioner:
             # GCP setup (optional)
             if GCP_AVAILABLE and self.platforge_gcp_service_account_file != "mock_service_account.json":
                 try:
-                    self.gcp_master_credentials = service_account.Credentials.from_service_account_file(
-                        self.platforge_gcp_service_account_file
-                    )
-                    print("✅ Connected to GCP master account")
+                    import os
+                    # Try environment variable first (for Railway deployment)
+                    gcp_json_env = os.environ.get('GOOGLE_APPLICATION_CREDENTIALS_JSON')
+                    if gcp_json_env:
+                        import json
+                        gcp_info = json.loads(gcp_json_env)
+                        self.gcp_master_credentials = service_account.Credentials.from_service_account_info(gcp_info)
+                        print("✅ Connected to GCP master account (from environment variable)")
+                    else:
+                        # Fallback to file (for local development)
+                        self.gcp_master_credentials = service_account.Credentials.from_service_account_file(
+                            self.platforge_gcp_service_account_file
+                        )
+                        print("✅ Connected to GCP master account (from file)")
                     self.gcp_connected = True
                 except Exception as gcp_e:
                     print(f"⚠️ GCP connection failed: {gcp_e}")
